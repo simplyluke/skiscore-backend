@@ -118,3 +118,32 @@ def sets_index():
     for skiset in sets:
         deserialized.append(skiset.toJson())
     return str(deserialized)
+
+@app.route("/set/<int:set_id>", methods=["GET"])
+def get_set(set_id):
+    set = Set.query.get(set_id)
+    return str(set.toJson())
+
+@app.route("/slalom/", methods=["GET"])
+def get_slalom_sets():
+    sets = Set.query.filter(Set.event == "Slalom")
+    deserialized = []
+    for skiset in sets:
+        deserialized.append(skiset.toJson())
+    return str(deserialized)
+
+@app.route("/trick/", methods=["GET"])
+def get_trick_sets():
+    sets = Set.query.filter(Set.event == "Trick")
+    deserialized = []
+    for skiset in sets:
+        deserialized.append(skiset.toJson())
+    return str(deserialized)
+
+@app.route("/jump/", methods=["GET"])
+def get_jump_sets():
+    sets = Set.query.filter(Set.event == "Jump")
+    deserialized = []
+    for skiset in sets:
+        deserialized.append(skiset.toJson())
+    return str(deserialized)
