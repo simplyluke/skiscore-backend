@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from config import Config
@@ -118,6 +118,21 @@ def sets_index():
     for skiset in sets:
         deserialized.append(skiset.toJson())
     return str(deserialized)
+
+@app.route("/sets", methods=["POST"])
+def new_set():
+    # TODO: validate data
+    content = request.get_json()
+
+    if not ('event' in content and 'notes' in content):
+        return(jsonify({"error": "Bad input"}), 400)
+
+    jsonEvent = content["event"]
+    jsonNotes = content["notes"]
+    s = Set(event = jsonEvent, notes = jsonNotes)
+    db.session.add(s)
+    db.session.commit()
+    return jsonify({"set_id": str(s.id)})
 
 @app.route("/set/<int:set_id>", methods=["GET"])
 def get_set(set_id):
