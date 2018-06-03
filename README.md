@@ -10,15 +10,17 @@ Table - JumpPasses (id: PrimaryKey, setId: ForeignKey, boatSpeed: float, boatPat
 Table - SlalomPasses (id: PrimaryKey, setId: ForeignKey, boatSpeed: Float, ropeLength: Float, buoyCount: Float)
 
 GET /sets/ -> list of all sets
-POST /sets/ -> create a new set of a type
-DELETE
+POST /set/ -> create a new set of a type
+DELETE /set/
 GET /sets/:id -> return passes of this set
-DELETE
 GET /trick/ -> return all trick sets
 POST /trick/ -> create new trick pass
 GET /jump/ -> return all jump sets
 POST /jump/ -> create new jump pass
 GET /slalom/ -> return all slalom sets
 POST /slalom/ -> create new slalom pass
+DELETE /jump/
+DELETE /trick/
+DELETE /slalom/
 
 """

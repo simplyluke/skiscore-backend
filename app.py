@@ -112,7 +112,7 @@ class SlalomPass(db.Model):
 
 
 # Routes
-@app.route("/sets/", methods=["GET"])
+@app.route("/sets", methods=["GET"])
 def sets_index():
     sets = Set.query.all()
     deserialized = []
@@ -120,7 +120,7 @@ def sets_index():
         deserialized.append(skiset.toJson())
     return str(deserialized)
 
-@app.route("/sets/", methods=["POST"])
+@app.route("/sets", methods=["POST"])
 def new_set():
     # TODO: validate data
     content = request.get_json()
@@ -135,12 +135,19 @@ def new_set():
     db.session.commit()
     return jsonify({"set_id": str(s.id)})
 
-@app.route("/set/<int:set_id>/", methods=["GET"])
+@app.route("/sets/<int:set_id>", methods=["DELETE"])
+def delete_set(set_id):
+    set = Set.query.get(set_id)
+    db.session.delete(set)
+    db.session.commit()
+    return jsonify({"success": "Set successfully deleted."})
+
+@app.route("/set/<int:set_id>", methods=["GET"])
 def get_set(set_id):
     set = Set.query.get(set_id)
     return str(set.toJson())
 
-@app.route("/slalom/", methods=["GET"])
+@app.route("/slalom", methods=["GET"])
 def get_slalom_sets():
     sets = Set.query.filter(Set.event == "Slalom")
     deserialized = []
@@ -148,7 +155,7 @@ def get_slalom_sets():
         deserialized.append(skiset.toJson())
     return str(deserialized)
 
-@app.route("/slalom/", methods=["POST"])
+@app.route("/slalom", methods=["POST"])
 def new_slalom_pass():
     # TODO: validate data
     content = request.get_json()
@@ -166,7 +173,7 @@ def new_slalom_pass():
     db.session.commit()
     return jsonify({"pass_id": str(sp.id)})
 
-@app.route("/trick/", methods=["GET"])
+@app.route("/trick", methods=["GET"])
 def get_trick_sets():
     sets = Set.query.filter(Set.event == "Trick")
     deserialized = []
@@ -174,7 +181,7 @@ def get_trick_sets():
         deserialized.append(skiset.toJson())
     return str(deserialized)
 
-@app.route("/trick/", methods=["POST"])
+@app.route("/trick", methods=["POST"])
 def new_trick_pass():
     # TODO: validate data
     content = request.get_json()
@@ -192,7 +199,7 @@ def new_trick_pass():
     db.session.commit()
     return jsonify({"pass_id": str(tp.id)})
 
-@app.route("/jump/", methods=["GET"])
+@app.route("/jump", methods=["GET"])
 def get_jump_sets():
     sets = Set.query.filter(Set.event == "Jump")
     deserialized = []
@@ -200,7 +207,7 @@ def get_jump_sets():
         deserialized.append(skiset.toJson())
     return str(deserialized)
 
-@app.route("/jump/", methods=["POST"])
+@app.route("/jump", methods=["POST"])
 def new_jump_pass():
     # TODO: validate data
     content = request.get_json()
