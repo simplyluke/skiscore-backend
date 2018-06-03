@@ -13,10 +13,12 @@ GET /sets/ -> list of all sets
 POST /sets/ -> create a new set of a type
 DELETE
 GET /sets/:id -> return passes of this set
-POST /sets/:id -> create a new pass within a set
 DELETE
 GET /trick/ -> return all trick sets
+POST /trick/ -> create new trick pass
 GET /jump/ -> return all jump sets
+POST /jump/ -> create new jump pass
 GET /slalom/ -> return all slalom sets
+POST /slalom/ -> create new slalom pass
 
 """

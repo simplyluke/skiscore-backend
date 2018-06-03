@@ -110,6 +110,7 @@ class SlalomPass(db.Model):
             'zoSetting': self.zoSetting
         }
 
+
 # Routes
 @app.route("/sets/", methods=["GET"])
 def sets_index():
@@ -119,7 +120,7 @@ def sets_index():
         deserialized.append(skiset.toJson())
     return str(deserialized)
 
-@app.route("/sets", methods=["POST"])
+@app.route("/sets/", methods=["POST"])
 def new_set():
     # TODO: validate data
     content = request.get_json()
@@ -134,7 +135,7 @@ def new_set():
     db.session.commit()
     return jsonify({"set_id": str(s.id)})
 
-@app.route("/set/<int:set_id>", methods=["GET"])
+@app.route("/set/<int:set_id>/", methods=["GET"])
 def get_set(set_id):
     set = Set.query.get(set_id)
     return str(set.toJson())
@@ -147,6 +148,24 @@ def get_slalom_sets():
         deserialized.append(skiset.toJson())
     return str(deserialized)
 
+@app.route("/slalom/", methods=["POST"])
+def new_slalom_pass():
+    # TODO: validate data
+    content = request.get_json()
+
+    if not ('setId' in content and 'ropeLength' in content and 'buoyCount' in content and 'speed' in content and 'zoSetting' in content):
+        return(jsonify({"error": "Bad input"}), 400)
+
+    jsonSetId = content["setId"]
+    jsonRopeLength = content["ropeLength"]
+    jsonBuoyCount = content["buoyCount"]
+    jsonSpeed = content["speed"]
+    jsonZoSetting = content["zoSetting"]
+    sp = SlalomPass(setId = jsonSetId, ropeLength = jsonRopeLength, buoyCount = jsonBuoyCount, boatSpeed = jsonSpeed, zoSetting = jsonZoSetting)
+    db.session.add(sp)
+    db.session.commit()
+    return jsonify({"pass_id": str(sp.id)})
+
 @app.route("/trick/", methods=["GET"])
 def get_trick_sets():
     sets = Set.query.filter(Set.event == "Trick")
@@ -155,6 +174,24 @@ def get_trick_sets():
         deserialized.append(skiset.toJson())
     return str(deserialized)
 
+@app.route("/trick/", methods=["POST"])
+def new_trick_pass():
+    # TODO: validate data
+    content = request.get_json()
+
+    if not ('setId' in content and 'name' in content and 'points' in content and 'speed' in content and 'zoSetting' in content):
+        return(jsonify({"error": "Bad input"}), 400)
+
+    jsonSetId = content["setId"]
+    jsonName = content["name"]
+    jsonPoints = content["points"]
+    jsonSpeed = content["speed"]
+    jsonZoSetting = content["zoSetting"]
+    tp = TrickPass(setId = jsonSetId, name = jsonName, points = jsonPoints, speed = jsonSpeed, zoSetting = jsonZoSetting)
+    db.session.add(tp)
+    db.session.commit()
+    return jsonify({"pass_id": str(tp.id)})
+
 @app.route("/jump/", methods=["GET"])
 def get_jump_sets():
     sets = Set.query.filter(Set.event == "Jump")
@@ -162,3 +199,23 @@ def get_jump_sets():
     for skiset in sets:
         deserialized.append(skiset.toJson())
     return str(deserialized)
+
+@app.route("/jump/", methods=["POST"])
+def new_jump_pass():
+    # TODO: validate data
+    content = request.get_json()
+
+    if not ('setId' in content and 'boatPath' in content and 'distance' in content and 'speed' in content and 'zoSetting' in content and 'rampHeight' in content):
+        return(jsonify({"error": "Bad input"}), 400)
+
+    jsonSetId = content["setId"]
+    jsonBoatPath = content["boatPath"]
+    jsonDistance = content["distance"]
+    jsonSpeed = content["speed"]
+    jsonRampHeight = content["rampHeight"]
+    jsonZoSetting = content["zoSetting"]
+    jp = JumpPass(setId = jsonSetId, boatPath = jsonBoatPath, distance = jsonDistance, speed = jsonSpeed, rampHeight = jsonRampHeight, zoSetting = jsonZoSetting)
+    print(jp)
+    db.session.add(jp)
+    db.session.commit()
+    return jsonify({"pass_id": str(jp.id)})
