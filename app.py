@@ -138,11 +138,17 @@ def new_set():
 @app.route("/sets/<int:set_id>", methods=["DELETE"])
 def delete_set(set_id):
     set = Set.query.get(set_id)
+    for skiPass in set.slalomPasses:
+        delete_slalom_pass(skiPass.id)
+    for skiPass in set.trickPasses:
+        delete_trick_pass(skiPass.id)
+    for skiPass in set.jumpPasses:
+        delete_jump_pass(skiPass.id)
     db.session.delete(set)
     db.session.commit()
     return jsonify({"success": "Set successfully deleted."})
 
-@app.route("/set/<int:set_id>", methods=["GET"])
+@app.route("/sets/<int:set_id>", methods=["GET"])
 def get_set(set_id):
     set = Set.query.get(set_id)
     return str(set.toJson())
@@ -173,6 +179,13 @@ def new_slalom_pass():
     db.session.commit()
     return jsonify({"pass_id": str(sp.id)})
 
+@app.route("/slalom/<int:pass_id>", methods=["DELETE"])
+def delete_slalom_pass(pass_id):
+    skiPass = SlalomPass.query.get(pass_id)
+    db.session.delete(skiPass)
+    db.session.commit()
+    return jsonify({"success": "Slalom pass successfully deleted."})
+
 @app.route("/trick", methods=["GET"])
 def get_trick_sets():
     sets = Set.query.filter(Set.event == "Trick")
@@ -198,6 +211,13 @@ def new_trick_pass():
     db.session.add(tp)
     db.session.commit()
     return jsonify({"pass_id": str(tp.id)})
+
+@app.route("/trick/<int:pass_id>", methods=["DELETE"])
+def delete_trick_pass(pass_id):
+    skiPass = TrickPass.query.get(pass_id)
+    db.session.delete(skiPass)
+    db.session.commit()
+    return jsonify({"success": "Trick pass successfully deleted."})
 
 @app.route("/jump", methods=["GET"])
 def get_jump_sets():
@@ -226,3 +246,10 @@ def new_jump_pass():
     db.session.add(jp)
     db.session.commit()
     return jsonify({"pass_id": str(jp.id)})
+
+@app.route("/jump/<int:pass_id>", methods=["DELETE"])
+def delete_jump_pass(pass_id):
+    skiPass = JumpPass.query.get(pass_id)
+    db.session.delete(skiPass)
+    db.session.commit()
+    return jsonify({"success": "Jump pass successfully deleted."})
